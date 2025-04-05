@@ -1,5 +1,5 @@
 // Constants and Configuration
-const MISTRAL_API_KEY = 'sAtFQbj6YlnK1TXe7H5kJdPOSfnDdIBo';
+const MISTRAL_API_KEY = 'MISTRAL-API-KEY'; // API IS PRIVATE DUE TO SECURITY PURPOSE
 const MISTRAL_API_URL = 'https://api.mistral.ai/v1/chat/completions';
 
 // Cached questions for offline mode
