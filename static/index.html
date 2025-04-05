@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sports Trivia Challenge</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- PDF Generation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+    </style>
+    <meta name="theme-color" content="#121212">
+</head>
+<body class="dark-mode">
+    <div class="connection-status">
+        <div class="status-indicator online"></div>
+        <span class="status-text">Bot is Online</span>
+    </div>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-trophy"></i>
+            <h1>Sports Trivia</h1>
+        </div>
+        <div class="theme-toggle">
+            <i class="fas fa-moon"></i>
+            <div class="toggle-switch">
+                <input type="checkbox" id="theme-toggle">
+                <label for="theme-toggle"></label>
+            </div>
+            <i class="fas fa-sun"></i>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <!-- Hero Section -->
+        <section id="hero" class="hero-section">
+            <h2 id="animated-hero-text">Test Your Sports Knowledge</h2>
+            <p>Challenge yourself with trivia questions about your favorite sports</p>
+            <button id="start-playing" class="btn primary-btn" data-text="Start Playing">Start Playing</button>
+        </section>
+        
+        <!-- Game Categories Section -->
+        <section id="game-categories" class="game-cards-container hidden">
+            <h2>Choose a Sports Category</h2>
+            <div class="game-grid">
+                <div class="game-card" data-category="football">
+                    <div class="card-inner">
+                        <i class="fas fa-football-ball"></i>
+                        <h3>Football</h3>
+                    </div>
+                </div>
+                <div class="game-card" data-category="basketball">
+                    <div class="card-inner">
+                        <i class="fas fa-basketball-ball"></i>
+                        <h3>Basketball</h3>
+                    </div>
+                </div>
+                <div class="game-card" data-category="soccer">
+                    <div class="card-inner">
+                        <i class="fas fa-futbol"></i>
+                        <h3>Soccer</h3>
+                    </div>
+                </div>
+                <div class="game-card" data-category="tennis">
+                    <div class="card-inner">
+                        <i class="fas fa-table-tennis"></i>
+                        <h3>Tennis</h3>
+                    </div>
+                </div>
+                <div class="game-card" data-category="golf">
+                    <div class="card-inner">
+                        <i class="fas fa-golf-ball"></i>
+                        <h3>Golf</h3>
+                    </div>
+                </div>
+                <div class="game-card" data-category="baseball">
+                    <div class="card-inner">
+                        <i class="fas fa-baseball-ball"></i>
+                        <h3>Baseball</h3>
+                    </div>
+                </div>
+                <div class="game-card" data-category="hockey">
+                    <div class="card-inner">
+                        <i class="fas fa-hockey-puck"></i>
+                        <h3>Hockey</h3>
+                    </div>
+                </div>
+                <div class="game-card" data-category="cricket">
+                    <div class="card-inner">
+                        <i class="fas fa-cricket"></i>
+                        <h3>Cricket</h3>
+                    </div>
+                </div>
+                <div class="game-card" data-category="racing">
+                    <div class="card-inner">
+                        <i class="fas fa-flag-checkered"></i>
+                        <h3>Racing</h3>
+                    </div>
+                </div>
+                <div class="game-card" data-category="boxing">
+                    <div class="card-inner">
+                        <i class="fas fa-fist-raised"></i>
+                        <h3>Boxing</h3>
+                    </div>
+                </div>
+                <div class="game-card" data-category="swimming">
+                    <div class="card-inner">
+                        <i class="fas fa-swimmer"></i>
+                        <h3>Swimming</h3>
+                    </div>
+                </div>
+                <div class="game-card" data-category="olympics">
+                    <div class="card-inner">
+                        <i class="fas fa-ring"></i>
+                        <h3>Olympics</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Game Configuration Modal -->
+        <div id="config-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Game Configuration</h3>
+                    <button class="close-modal" aria-label="Close modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="config-option">
+                        <label for="question-count">Number of Questions: <span id="question-count-value">5</span></label>
+                        <input type="range" id="question-count" min="5" max="20" step="1" value="5">
+                    </div>
+                    <div class="config-option">
+                        <label for="question-time">Time per Question: <span id="question-time-value">30</span> seconds</label>
+                        <input type="range" id="question-time" min="10" max="60" step="5" value="30">
+                    </div>
+                    <div class="config-option">
+                        <label for="points-per-question">Points per Question: <span id="points-per-question-value">1</span></label>
+                        <input type="range" id="points-per-question" min="1" max="20" step="1" value="1">
+                    </div>
+                    <div class="config-option">
+                        <label for="negative-marking">Negative Marking: <span id="negative-marking-value">0.00</span> points</label>
+                        <input type="range" id="negative-marking" min="0" max="3" step="0.25" value="0">
+                    </div>
+                    <div class="config-option">
+                        <label>Difficulty Level:</label>
+                        <div class="difficulty-buttons">
+                            <button class="difficulty-btn active" data-difficulty="easy">Easy</button>
+                            <button class="difficulty-btn" data-difficulty="medium">Medium</button>
+                            <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="start-game" class="btn primary-btn">Start Game</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Section -->
+        <section id="game-section" class="game-section hidden">
+            <div class="game-header">
+                <div class="category-info">
+                    <i class="category-icon"></i>
+                    <h3 class="category-name"></h3>
+                </div>
+                <div class="game-progress">
+                    <div class="question-counter">
+                        <span id="current-question">1</span>/<span id="total-questions">10</span>
+                    </div>
+                    <div class="timer-container">
+                        <div class="timer-bar">
+                            <div class="timer-progress"></div>
+                        </div>
+                        <div class="timer-text"><span id="timer-value">30</span>s</div>
+                    </div>
+                </div>
+                <div class="score-display">
+                    <i class="fas fa-star"></i>
+                    <span id="current-score">0</span>
+                </div>
+            </div>
+            <div class="question-container">
+                <h2 id="question-text"></h2>
+                <div id="answers-container" class="answers-container"></div>
+            </div>
+            <div class="game-controls">
+                <button id="skip-question" class="btn secondary-btn">Skip Question</button>
+                <button id="end-game" class="btn secondary-btn" disabled>End Game</button>
+                <div class="tooltip" id="end-game-tooltip">Enabled after completing 50% of questions</div>
+            </div>
+        </section>
+
+        <!-- End Game Confirmation Modal -->
+        <div id="end-confirm-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>End Game</h3>
+                    <button id="close-end-confirm" class="close-modal" aria-label="Close confirmation">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to end the game?</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="confirm-end" class="btn danger-btn">End Game</button>
+                    <button id="continue-game" class="btn secondary-btn">Continue Playing</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Dashboard -->
+        <section id="results-section" class="results-section hidden">
+            <h2>Game Results</h2>
+            <div class="results-summary">
+                <div class="result-card">
+                    <i class="fas fa-trophy"></i>
+                    <h3>Final Score</h3>
+                    <p><span id="final-score">0</span>/<span id="max-possible-score">10</span></p>
+                    <div class="score-breakdown">
+                        <span id="raw-score">Base: 0</span>
+                        <span id="negative-score">Penalty: 0</span>
+                    </div>
+                </div>
+                <div class="result-card">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Correct Answers</h3>
+                    <p><span id="correct-answers">0</span>/<span id="results-total-questions">10</span></p>
+                </div>
+                <div class="result-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>Total Time</h3>
+                    <p id="total-time">0:00</p>
+                </div>
+                <div class="result-card">
+                    <i class="fas fa-percent"></i>
+                    <h3>Accuracy</h3>
+                    <p id="accuracy">0%</p>
+                </div>
+            </div>
+            <div class="charts-wrapper">
+                <h3 class="charts-title">Performance Charts</h3>
+                <div class="charts-container">
+                    <div class="chart">
+                        <h3>Questions Summary</h3>
+                        <canvas id="answers-chart"></canvas>
+                    </div>
+                    <div class="chart">
+                        <h3>Time per Question</h3>
+                        <canvas id="time-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="performance-feedback">
+                <div class="performance-rating">
+                    <h3>Your Performance</h3>
+                    <div class="star-rating">
+                        <i class="far fa-star" data-rating="1"></i>
+                        <i class="far fa-star" data-rating="2"></i>
+                        <i class="far fa-star" data-rating="3"></i>
+                        <i class="far fa-star" data-rating="4"></i>
+                        <i class="far fa-star" data-rating="5"></i>
+                    </div>
+                </div>
+                <div class="performance-suggestion">
+                    <h3>Suggestions for Improvement</h3>
+                    <p id="suggestion-text">Complete more games to receive personalized suggestions.</p>
+                </div>
+            </div>
+            
+            <div class="results-actions">
+                <button id="try-again" class="btn secondary-btn">Try Again</button>
+                <button id="new-game" class="btn primary-btn">New Game</button>
+                <button id="back-to-home" class="btn tertiary-btn">Back to Home</button>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="app-info">
+                <h3>Sports Trivia Challenge</h3>
+                <p>Test your knowledge with our interactive sports trivia game. Challenge yourself with questions about your favorite sports, track your progress, and improve your scores!</p>
+            </div>
+            <div class="team-info">
+                <h4>Project Team</h4>
+                <div class="team-members">
+                    <div class="team-member">
+                        <span class="name">Himanshu Raj</span>
+                        <span class="reg-number">12314450</span>
+                    </div>
+                    <div class="team-member">
+                        <span class="name">Mohd. Subhan</span>
+                        <span class="reg-number">12314341</span>
+                    </div>
+                    <div class="team-member">
+                        <span class="name">Harshit Dhiman</span>
+                        <span class="reg-number">12315075</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="ai-assistant-widget icon-only">
+        <div class="chat-header">
+            <div class="ai-info">
+                <i class="fas fa-basketball-ball"></i>
+                <h3>Sports Assistant</h3>
+            </div>
+            <div class="chat-controls">
+                <button id="voice-input" class="icon-btn"><i class="fas fa-microphone"></i></button>
+                <button class="close-chat" id="close-chat" aria-label="Minimize chat">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="chat-body">
+            <div id="messages-container" class="messages-container">
+                <div class="message ai-message">
+                    <div class="message-content">
+                        <p>Hi there! I'm your Sports Trivia assistant. How can I help you today?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" id="chat-input" placeholder="Ask me anything about sports...">
+                <button id="send-message"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
