@@ -1,10 +1,8 @@
 # Sports Trivia Challenge
 ## Project Presentation
-### Project Team
-- Himanshu Raj (12314450)
-- Mohd. Subhan (12314341)
-- Harshit Dhiman (12315075)
-### Project Overview
+### Developer
+- Himanshu Raj
+# Project Overview
 This project is an interactive sports trivia web application that challenges users with questions
 across various sports categories. The application features a responsive design, multiple game
 modes, and an AI assistant to help users.
